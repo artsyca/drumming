@@ -59,6 +59,7 @@
     "edition": "octane"
   },
   "dependencies": {
+    "@ember/render-modifiers": "^1.0.2",
     "midi-player-js": "^2.0.13",
     "midi-writer-js": "^1.7.4",
     "soundfont-player": "^0.12.0",
