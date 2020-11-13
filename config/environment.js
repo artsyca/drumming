@@ -29,6 +29,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV.APP.rootElement = '#ember-drumming';
   }
 
   if (environment === 'test') {
@@ -45,6 +46,8 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
+    ENV.rootURL = '/ember-drumming';
+    ENV.APP.rootElement = '#ember-drumming';
   }
 
   return ENV;
