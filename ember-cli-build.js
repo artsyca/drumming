@@ -5,6 +5,15 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
     // Add options here
+    // https://github.com/ef4/ember-auto-import#global-is-undefined-or-cant-find-module-path-or-cant-find-module-fs
+    autoImport: {
+      webpack: {
+        node: {
+          global: true,
+          fs: 'empty'
+        }
+      }
+    }
   });
 
   // Use `app.import` to add additional libraries to the generated
