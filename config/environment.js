@@ -30,6 +30,7 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
     ENV.APP.rootElement = '#ember-drumming';
+    ENV.APP.bongoSample = '/bongos.mp3.js'
   }
 
   if (environment === 'test') {
@@ -46,8 +47,10 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
-    ENV.rootURL = '/ember-drumming';
+    ENV.locationType = 'none',
+    ENV.rootURL = '/2020/11/13/drumming-an-algorithmic-approach-ember-test/';
     ENV.APP.rootElement = '#ember-drumming';
+    ENV.APP.bongoSample = '/ember-drumming/bongos.mp3.js'
   }
 
   return ENV;

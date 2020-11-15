@@ -1,37 +1,52 @@
 <section>
-	<h3>Resultant patterns</h3>
-	<p>"...drummers three and four sing and/or play patterns they hear clearly emerging from the combination of the first two drummers." - Steve Reich</p>
-	<h4>Adjust parameters and click the Generate Pattern button</h4>
-	<p><i>Each time you click the button, a pattern that fits these parameters will be randomly generated.</i></p>
-	<div class="parameter">
-		<label for="numNotes">Number of notes ({{format-number this.minNotes}} - {{format-number this.maxNotes}}) - <i>Measure of note density</i></label>
-		<input type="range" id="numNotes" min="{{this.minNotes}}" max="{{this.maxNotes}}" value="{{this.numNotes}}" step="1" list='numNotes-list' {{on "input" this.updateNotes}}>
-		<output id="numNotesOutput" for="numNotes">{{format-number this.numNotes}}</output>
-	</div>
-	<div class="parameter">
-		<label for="numStableBeats">Number of stable beats ({{format-number this.minStableBeats}} - {{format-number this.maxStableBeats}}) - <i>Measure of rhythmic stability</i></label>
-		<input type="range" id="numStableBeats" min="{{this.minStableBeats}}" max="{{this.maxStableBeats}}" value="{{this.numStableBeats}}" step="1" {{on "input" this.updateStableBeats}}>
-		<output id="numStableBeatsOutput" for="numStableBeats">{{format-number this.numStableBeats}}</output>
-	</div>
-	<div class="parameter">
-		<label for="numMelodicTurns">Number of melodic turns ({{format-number this.minMelodicTurns}} - {{format-number this.maxMelodicTurns}}) - <i>Measure of melodic contour</i></label>
-		<input type="range" id="numMelodicTurns" min="{{this.minMelodicTurns}}" max="{{this.maxMelodicTurns}}" value="{{this.numMelodicTurns}}" step="1" {{on "input" this.updateMelodicTurns}}>
-		<output id="numMelodicTurnsOutput" for="numMelodicTurns">{{this.numMelodicTurns}}</output>
-	</div>
-		<div id="stave-container"></div>
-	<p>Out of the <b>{{format-number this.numPossibilities}}</b> possibilities, here are the number of patterns that exist for these parameters:<br/><span  style="font-weight:bold" id="numPatterns"></span>
-	</p>
-	<p><button class="button" id="generate-pattern-button">Generate Next Pattern</button></p>
+  <h3>Resultant patterns</h3>
+  <p>"...drummers three and four sing and/or play patterns they hear clearly emerging from the combination of the first
+    two drummers." - Steve Reich</p>
+  <h4>Adjust parameters and click the Generate Pattern button</h4>
 
+  <p><i>Each time you click the button, a pattern that fits these parameters will be randomly generated.</i></p>
+  <div class="parameter">
+    <label for="numNotes">Number of notes ({{format-number this.minNotes}} - {{format-number this.maxNotes}}) -
+      <i>Measure of note density</i></label>
+    <input type="range" id="numNotes" min="{{this.minNotes}}" max="{{this.maxNotes}}" value="{{this.numNotes}}" step="1"
+      list='numNotes-list' {{on "input" this.updateNotes}}>
+    <output id="numNotesOutput" for="numNotes">{{format-number this.numNotes}}</output>
+  </div>
+  <div class="parameter">
+    <label for="numStableBeats">Number of stable beats ({{format-number this.minStableBeats}} -
+      {{format-number this.maxStableBeats}}) - <i>Measure of rhythmic stability</i></label>
+    <input type="range" id="numStableBeats" min="{{this.minStableBeats}}" max="{{this.maxStableBeats}}"
+      value="{{this.numStableBeats}}" step="1" {{on "input" this.updateStableBeats}}>
+    <output id="numStableBeatsOutput" for="numStableBeats">{{format-number this.numStableBeats}}</output>
+  </div>
+  <div class="parameter">
+    <label for="numMelodicTurns">Number of melodic turns ({{format-number this.minMelodicTurns}} -
+      {{format-number this.maxMelodicTurns}}) - <i>Measure of melodic contour</i></label>
+    <input type="range" id="numMelodicTurns" min="{{this.minMelodicTurns}}" max="{{this.maxMelodicTurns}}"
+      value="{{this.numMelodicTurns}}" step="1" {{on "input" this.updateMelodicTurns}}>
+    <output id="numMelodicTurnsOutput" for="numMelodicTurns">{{this.numMelodicTurns}}</output>
+  </div>
+  {{#if this.pattern}}
+  {{midi-player
+    audioContext=this.audioContext
+    minTempo=this.minTempo
+    maxTempo=this.maxTempo
+    tempo=this.tempo
+    updateTempo=this.updateTempo
+    voice=this.voice
+  }}
+  <p><button class="button" id="generate-pattern-button" {{on 'click' this.generateNextPattern}}>Generate Next Pattern</button></p>
+  {{stave-container
+      pattern=this.pattern
+      newVoiceGenerated=this.newVoiceGenerated
+    }}
 
-	<div class="parameter">
-		<label for="tempo">Tempo ({{format-number this.minTempo}} - {{format-number this.maxTempo}} bpm):</label>
-		<input type="range" class="slider" id="tempo" min="{{this.minTempo}}" max="{{this.maxTempo}}" value="{{this.tempo}}" step="1" {{on "input" this.updateTempo}}>
-		<output id="tempoOutput" for="tempo">{{this.tempo}}</output>
-	</div>
-	<button class="button" id="play-button">Play</button>
-	<button class="button" id="pause-button">Pause</button>
+  <p>Out of the <b>{{format-number this.numPossibilities}}</b> possibilities, <b>{{this.resultantPatterns.length}}</b>
+    patterns exist for these parameters</p>
+
+  {{/if}}
 	<p>If you are using an iPhone and cannot hear the audio playback, please make sure that silent mode is off.</p>
+
 </section>
 
 <a target="_blank" href="https://github.com/oliverxu07/drumming/blob/master/README.md">Project code available here</a>

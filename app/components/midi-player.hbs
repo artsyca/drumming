@@ -1,0 +1,17 @@
+	<div class="parameter">
+		<label for="tempo">Tempo ({{format-number @minTempo}} - {{format-number @maxTempo}} bpm):</label>
+		<input type="range" class="slider" id="tempo" min="{{@minTempo}}" max="{{@maxTempo}}" value="{{@tempo}}" step="1" {{on "input" @updateTempo}}>
+		<output id="tempoOutput" for="tempo">{{@tempo}}</output>
+	</div>
+  {{#if this.isPlaying}}
+  	<button class="button" id="pause-button"
+    {{on 'click' this.pause}}
+  >Pause</button>
+  {{else}}
+	<button class="button" id="play-button"
+    {{on 'click' (fn this.play @voice @tempo)}}
+      {{did-insert this.setupInstrument}}
+      {{did-update this.setupInstrument}}
+      disabled={{this.disablePlayButton}}
+    >Play</button>
+  {{/if}}
