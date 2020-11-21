@@ -35,7 +35,6 @@
     updateTempo=this.updateTempo
     voice=this.voice
   }}
-  <p><button class="button" id="generate-pattern-button" {{on 'click' this.generateNextPattern}}>Generate Next Pattern</button></p>
   {{stave-container
       pattern=this.pattern
       newVoiceGenerated=this.newVoiceGenerated
@@ -43,6 +42,7 @@
 
   <p>Out of the <b>{{format-number this.numPossibilities}}</b> possibilities, <b>{{this.resultantPatterns.length}}</b>
     patterns exist for these parameters</p>
+  <p><button class="button" id="generate-pattern-button" {{on 'click' this.generateNextPattern}}>Generate Next Pattern</button></p>
 
   {{/if}}
 	<p>If you are using an iPhone and cannot hear the audio playback, please make sure that silent mode is off.</p>
