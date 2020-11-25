@@ -1,8 +1,12 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
+import { collect } from '@ember/object/computed';
 import { tracked } from '@glimmer/tracking';
 import { nextPattern, createComposite, genAllPatterns, getResultantPatterns } from '../lib/oliverxu07/drumming/logic';
 
+function rotateArray(arr, n) {
+  return arr.slice(n, arr.length).concat(arr.slice(0, n));
+}
 export default class ApplicationController extends Controller {
 
   @computed
@@ -21,12 +25,18 @@ export default class ApplicationController extends Controller {
   }
 
   drummer1 = [0, 3, 5, -1, 3, -1, 5, 3, 2, -1, 3, -1];
-  drummer2 = [5, -1, 3, -1, 5, 3, 2, -1, 3, -1, 0, 3];
 
+  @computed('phaseValue')
+  get drummer2 () {
+    return rotateArray(this.drummer1, this.phaseValue);
+  }
+
+  @computed('drummer2.[]')
   get composite() {
     return createComposite(this.drummer1, this.drummer2);
   }
 
+  @computed('drummer2.[]')
   get allPatterns() {
     return genAllPatterns(this.composite);
   }
@@ -48,23 +58,36 @@ export default class ApplicationController extends Controller {
   @tracked tempo = 120;
 
   @tracked voice;
+  @tracked drummer1Voice;
+  @tracked drummer2Voice;
+
+  @tracked phaseValue = 2;
+  minPhase = 1;
+  maxPhase = 11;
+
+  @tracked patternIndex = 0;
+
+  @tracked currentPlayer;
+
+  @collect('drummer1Voice', 'drummer2Voice', 'voice') compositeVoices;
 
   get numPossibilities() {
     return this.allPatterns.length;
   }
 
-  @computed('numNotes', 'numStableBeats', 'numMelodicTurns')
+  @computed('numNotes', 'numStableBeats', 'numMelodicTurns', 'allPatterns.[]')
   get resultantPatterns () {
     return getResultantPatterns(this.allPatterns, this.numNotes, this.numStableBeats, this.numMelodicTurns, );
   }
 
-  @computed('resultantPatterns')
+  @computed('resultantPatterns.[]', 'patternIndex')
   get pattern () {
-    return nextPattern(this.resultantPatterns);
+    return this.resultantPatterns[this.patternIndex];
   }
 
-  set pattern (pattern) {
-    return pattern;
+  @action randomizePattern() {
+    const patterns = this.resultantPatterns || [];
+    this.patternIndex = Math.floor(Math.random() * patterns.length);
   }
 
   @action
@@ -85,11 +108,26 @@ export default class ApplicationController extends Controller {
     this.tempo = event.target.value;
   }
 
-  @action generateNextPattern() {
-    this.pattern = nextPattern(this.resultantPatterns);
-  }
-
   @action newVoiceGenerated(voice) {
     this.voice = voice;
+  }
+
+  @action drummer1VoiceGenerated(voice) {
+    this.drummer1Voice = voice;
+  }
+
+  @action drummer2VoiceGenerated(voice) {
+    this.drummer2Voice = voice;
+  }
+
+  @action updatePhase(event) {
+    this.phaseValue = event.target.value;
+  }
+
+  @action currentlyPlaying(player) {
+    if(this.currentPlayer && this.currentPlayer.isPlaying) {
+      this.currentPlayer.pause();
+    }
+    this.currentPlayer = player;
   }
 }

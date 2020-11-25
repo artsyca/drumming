@@ -1,4 +1,47 @@
 <section>
+  <h3>Pattern played by drummer 1</h3>
+  {{stave-container
+      elementId="drummer1"
+      pattern=this.drummer1
+      newVoiceGenerated=this.drummer1VoiceGenerated
+    }}
+  <h3>Pattern played by drummer 2</h3>
+  {{stave-container
+      elementId="drummer2"
+      pattern=this.drummer2
+      newVoiceGenerated=this.drummer2VoiceGenerated
+    }}
+
+  <div class="parameter">
+    <label for="phase">Phase ({{format-number this.minPhase}} - {{format-number this.maxPhase}} eighth notes) <i>Experimental</i>:</label>
+    <input type="range" class="slider" id="phase" min="{{this.minPhase}}" max="{{this.maxPhase}}"
+      value="{{this.phaseValue}}" step="1" {{on "input" this.updatePhase}}>
+    <output id="phaseOutput" for="phase">{{this.phaseValue}}</output>
+  </div>
+  <p><i>{{t 'phase_value' phaseValue=this.phaseValue htmlSafe=true}}</i></p>
+  <h3>Combination of phased patterns</h3>
+
+  {{midi-player
+    audioContext=this.audioContext
+    minTempo=this.minTempo
+    maxTempo=this.maxTempo
+    tempo=this.tempo
+    updateTempo=this.updateTempo
+    voice=this.compositeVoices
+    currentlyPlaying=this.currentlyPlaying
+  }}
+</section>
+
+<section>
+  <div class="parameter">
+    <label for="tempo">Tempo ({{format-number this.minTempo}} - {{format-number this.maxTempo}} bpm):</label>
+    <input type="range" class="slider" id="tempo" min="{{this.minTempo}}" max="{{this.maxTempo}}" value="{{this.tempo}}"
+      step="1" {{on "input" this.updateTempo}}>
+    <output id="tempoOutput" for="tempo">{{this.tempo}}</output>
+  </div>
+</section>
+
+<section>
   <h3>Resultant patterns</h3>
   <p>"...drummers three and four sing and/or play patterns they hear clearly emerging from the combination of the first
     two drummers." - Steve Reich</p>
@@ -26,7 +69,15 @@
       value="{{this.numMelodicTurns}}" step="1" {{on "input" this.updateMelodicTurns}}>
     <output id="numMelodicTurnsOutput" for="numMelodicTurns">{{this.numMelodicTurns}}</output>
   </div>
+
   {{#if this.pattern}}
+
+  {{stave-container
+      elementId="stave-container"
+      pattern=this.pattern
+      newVoiceGenerated=this.newVoiceGenerated
+    }}
+
   {{midi-player
     audioContext=this.audioContext
     minTempo=this.minTempo
@@ -34,19 +85,17 @@
     tempo=this.tempo
     updateTempo=this.updateTempo
     voice=this.voice
+    currentlyPlaying=this.currentlyPlaying
   }}
-  {{stave-container
-      pattern=this.pattern
-      newVoiceGenerated=this.newVoiceGenerated
-    }}
 
-  <p>Out of the <b>{{format-number this.numPossibilities}}</b> possibilities, <b>{{this.resultantPatterns.length}}</b>
-    patterns exist for these parameters</p>
-  <p><button class="button" id="generate-pattern-button" {{on 'click' this.generateNextPattern}}>Generate Next Pattern</button></p>
+  {{t 'num_possibilities' numPossibilities=(format-number this.numPossibilities) numPatterns=this.resultantPatterns.length htmlSafe=true}}
 
+  <p><button class="button" id="random-pattern-button" {{on 'click' this.randomizePattern}}>Generate Random
+      Pattern</button></p>
+
+  {{else}}
+  <p>No pattern exists for these parameters, please try a different combination.</p>
   {{/if}}
-	<p>If you are using an iPhone and cannot hear the audio playback, please make sure that silent mode is off.</p>
-
 </section>
 
 <a target="_blank" href="https://github.com/oliverxu07/drumming/blob/master/README.md">Project code available here</a>

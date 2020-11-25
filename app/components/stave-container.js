@@ -17,7 +17,8 @@ export default class StaveContainerComponent extends Component {
     }});
     var score = vf.EasyScore().set({ clef: 'bass', time: '12/8' });
     var newVoice = score.voice(score.notes(createLine(pattern)));
-    this.args.newVoiceGenerated(newVoice);
+
+    if(this.args.newVoiceGenerated) { this.args.newVoiceGenerated(newVoice); }
 
     var system = vf.System();
     system.addStave({

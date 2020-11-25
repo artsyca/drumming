@@ -8,10 +8,10 @@ import { tracked } from '@glimmer/tracking';
 import Soundfont from 'soundfont-player';
 import { run } from '@ember/runloop';
 import ENV from 'ember-drumming/config/environment';
+import { makeArray } from '@ember/array';
 
 // plays each note
 function midiCallback(event, instrument) {
-  console.log(event);
   if (event.name == 'Note on' && event.velocity != 0) {
     instrument.play(event.noteName);
   }
@@ -28,13 +28,13 @@ export default class MidiPlayerComponent extends Component {
   @oneWay('args.audioContext') audioContext;
   @empty('instrument') disablePlayButton
 
-  @computed('voice')
+  @computed('voice.[]')
   get dataUri () {
     const voice = this.voice;
-    if(!voice) { return; }
+    if(!voice || voice.length == 0) { return; }
     var vexWriter = new VexFlow();
-    var track = vexWriter.trackFromVoice(voice);
-		var writer = new MidiWriter.Writer([track]);
+    var tracks = makeArray(voice).map(v => vexWriter.trackFromVoice(v) );
+		var writer = new MidiWriter.Writer(tracks);
     // write MIDI track as dataUri
     return writer.dataUri();
   }
@@ -92,6 +92,7 @@ export default class MidiPlayerComponent extends Component {
   }
 
   @action play() {
+    this.args.currentlyPlaying(this);
     this.isPlaying = true;
     this.playerPlay();
   }

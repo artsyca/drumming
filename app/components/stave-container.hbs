@@ -1,8 +1,6 @@
 {{#if @pattern}}
-<div id="stave-container"
+<div id={{@elementId}}
   {{did-insert this.renderScore @pattern}}
   {{did-update this.renderScore @pattern}}
 ></div>
-{{else}}
-<p>No pattern exists for these parameters, please try a different combination.</p>
 {{/if}}
