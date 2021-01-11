@@ -1,33 +1,44 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
-import { collect } from '@ember/object/computed';
-import { tracked } from '@glimmer/tracking';
-import { nextPattern, createComposite, genAllPatterns, getResultantPatterns } from '../lib/oliverxu07/drumming/logic';
+import {
+  action,
+  computed
+} from '@ember/object';
+import {
+  collect,
+  oneWay,
+  gt
+} from '@ember/object/computed';
+import {
+  tracked
+} from '@glimmer/tracking';
+import {
+  getRandomIndex,
+  createComposite,
+  genAllPatterns,
+  getResultantPatterns,
+  getMaxNotesFromComposite,
+  rotateArray
+} from '../lib/oliverxu07/drumming/logic';
 
-function rotateArray(arr, n) {
-  return arr.slice(n, arr.length).concat(arr.slice(0, n));
-}
 export default class ApplicationController extends Controller {
 
   @computed
   get audioContext() {
-    let ac;
     if ('webkitAudioContext' in window) {
       // safari
-      ac = new webkitAudioContext();
+      return new webkitAudioContext();
     } else if ('AudioContext' in window) {
       // chrome and firefox, and edge
-      ac = new AudioContext();
+     return new AudioContext();
     } else {
       alert("Audio playback is unsupported by your browser. Please upgrade to the latest version of Chrome, Safari, Edge, or Firefox.");
     }
-    return ac;
   }
 
   drummer1 = [0, 3, 5, -1, 3, -1, 5, 3, 2, -1, 3, -1];
 
   @computed('phaseValue')
-  get drummer2 () {
+  get drummer2() {
     return rotateArray(this.drummer1, this.phaseValue);
   }
 
@@ -42,8 +53,20 @@ export default class ApplicationController extends Controller {
   }
 
   minNotes = 0;
-  maxNotes = 10;
-  @tracked numNotes = 6;
+
+  @computed('composite.[]')
+  get maxNotes() {
+    return getMaxNotesFromComposite(this.composite);
+  }
+
+  @computed('maxNotes', '_numNotes')
+  get numNotes() {
+    return Math.min(this.maxNotes, this._numNotes || 6);
+  }
+
+  set numNotes(x) {
+    return this._numNotes = x;
+  }
 
   minStableBeats = 0;
   maxStableBeats = 3;
@@ -57,37 +80,48 @@ export default class ApplicationController extends Controller {
   maxTempo = 300;
   @tracked tempo = 120;
 
-  @tracked voice;
+  @tracked resultantVoice;
   @tracked drummer1Voice;
   @tracked drummer2Voice;
 
   @tracked phaseValue = 2;
-  minPhase = 1;
+  minPhase = 0;
   maxPhase = 11;
 
-  @tracked patternIndex = 0;
+  @computed('numResultantPatterns', '_patternIndex')
+  get patternIndex() {
+    return Math.min(this.numResultantPatterns - 1, this._patternIndex || 0);
+  }
+
+  set patternIndex(x) {
+    return this._patternIndex = x;
+  }
 
   @tracked currentPlayer;
 
-  @collect('drummer1Voice', 'drummer2Voice', 'voice') compositeVoices;
+  @collect('drummer1Voice', 'drummer2Voice') compositeVoices;
 
+  @computed('allPatterns.length')
   get numPossibilities() {
     return this.allPatterns.length;
   }
 
   @computed('numNotes', 'numStableBeats', 'numMelodicTurns', 'allPatterns.[]')
-  get resultantPatterns () {
-    return getResultantPatterns(this.allPatterns, this.numNotes, this.numStableBeats, this.numMelodicTurns, );
+  get resultantPatterns() {
+    return getResultantPatterns(this.allPatterns, this.numNotes, this.numStableBeats, this.numMelodicTurns);
   }
 
   @computed('resultantPatterns.[]', 'patternIndex')
-  get pattern () {
+  get pattern() {
     return this.resultantPatterns[this.patternIndex];
   }
 
+  @oneWay('resultantPatterns.length') numResultantPatterns;
+
+  @gt('numResultantPatterns', 1) showGeneratePatternButton;
+
   @action randomizePattern() {
-    const patterns = this.resultantPatterns || [];
-    this.patternIndex = Math.floor(Math.random() * patterns.length);
+    this.patternIndex = getRandomIndex(this.resultantPatterns);
   }
 
   @action
@@ -96,7 +130,7 @@ export default class ApplicationController extends Controller {
   }
 
   @action
-  updateNotes (event) {
+  updateNotes(event) {
     this.numNotes = event.target.value;
   }
 
@@ -108,8 +142,8 @@ export default class ApplicationController extends Controller {
     this.tempo = event.target.value;
   }
 
-  @action newVoiceGenerated(voice) {
-    this.voice = voice;
+  @action resultantVoiceGenerated(voice) {
+    this.resultantVoice = voice;
   }
 
   @action drummer1VoiceGenerated(voice) {
@@ -125,7 +159,7 @@ export default class ApplicationController extends Controller {
   }
 
   @action currentlyPlaying(player) {
-    if(this.currentPlayer && this.currentPlayer.isPlaying) {
+    if (this.currentPlayer && this.currentPlayer.isPlaying) {
       this.currentPlayer.pause();
     }
     this.currentPlayer = player;

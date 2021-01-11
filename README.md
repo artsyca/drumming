@@ -1,7 +1,8 @@
 # ember-drumming
 
 This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+
+The app is an adaptation of [oliverxu07/drumming](http://github.com/oliverxu07/drumming) implementing the [EmberJS](http://github.com/emberjs/ember.js) application framework.
 
 ## Prerequisites
 
@@ -10,13 +11,14 @@ You will need the following things properly installed on your computer.
 * [Git](https://git-scm.com/)
 * [Node.js](https://nodejs.org/) (with npm)
 * [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+* [Yarn](https://www.npmjs.com/package/yarn)
+* A standards-compliant browser
 
 ## Installation
 
-* `git clone <repository-url>` this repository
+* `git clone git@github.com:artsyca/drumming.git` this repository
 * `cd ember-drumming`
-* `npm install`
+* `yarn install`
 
 ## Running / Development
 

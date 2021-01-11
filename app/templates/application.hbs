@@ -12,13 +12,6 @@
       newVoiceGenerated=this.drummer2VoiceGenerated
     }}
 
-  <div class="parameter">
-    <label for="phase">Phase ({{format-number this.minPhase}} - {{format-number this.maxPhase}} eighth notes) <i>Experimental</i>:</label>
-    <input type="range" class="slider" id="phase" min="{{this.minPhase}}" max="{{this.maxPhase}}"
-      value="{{this.phaseValue}}" step="1" {{on "input" this.updatePhase}}>
-    <output id="phaseOutput" for="phase">{{this.phaseValue}}</output>
-  </div>
-  <p><i>{{t 'phase_value' phaseValue=this.phaseValue htmlSafe=true}}</i></p>
   <h3>Combination of phased patterns</h3>
 
   {{midi-player
@@ -75,7 +68,7 @@
   {{stave-container
       elementId="stave-container"
       pattern=this.pattern
-      newVoiceGenerated=this.newVoiceGenerated
+      newVoiceGenerated=this.resultantVoiceGenerated
     }}
 
   {{midi-player
@@ -84,18 +77,19 @@
     maxTempo=this.maxTempo
     tempo=this.tempo
     updateTempo=this.updateTempo
-    voice=this.voice
+    voice=this.resultantVoice
     currentlyPlaying=this.currentlyPlaying
   }}
 
-  {{t 'num_possibilities' numPossibilities=(format-number this.numPossibilities) numPatterns=this.resultantPatterns.length htmlSafe=true}}
+  {{t 'num_possibilities' numPossibilities=(format-number this.numPossibilities) numPatterns=this.numResultantPatterns htmlSafe=true}}
 
+  {{#if this.showGeneratePatternButton}}
   <p><button class="button" id="random-pattern-button" {{on 'click' this.randomizePattern}}>Generate Random
       Pattern</button></p>
+  {{/if}}
 
   {{else}}
   <p>No pattern exists for these parameters, please try a different combination.</p>
   {{/if}}
 </section>
-
 <a target="_blank" href="https://github.com/oliverxu07/drumming/blob/master/README.md">Project code available here</a>

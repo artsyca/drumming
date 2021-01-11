@@ -1,3 +1,2 @@
 price_banner: The {product} costs {price, number, USD}
 num_possibilities: <p>Out of the <b>{numPossibilities}</b> possibilities, {numPatterns, plural, =1 {<b>one</b> pattern exists} other {<b>#</b> patterns exist}} for these parameters.</p>
-phase_value: Phased {phaseValue, plural, =1 {one eighth note} =2 {one quarter note} =3 {three eighth notes} =4 {two quarter notes} =5 {five eighth notes} =6 {three quarter notes} =7 {seven eighth notes} =8 {a whole note } =9 {nine eighth notes} =10 {five quarter notes} =11 {11 eighth notes} other {# eighth notes}} ahead of drummer 1
