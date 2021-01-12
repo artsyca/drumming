@@ -65,6 +65,13 @@
 
   {{#if this.pattern}}
 
+  {{t 'num_possibilities' numPossibilities=(format-number this.numPossibilities) numPatterns=this.numResultantPatterns htmlSafe=true}}
+
+  {{#if this.showGeneratePatternButton}}
+  <p><button class="button" id="random-pattern-button" {{on 'click' this.randomizePattern}}>Generate Random
+      Pattern</button></p>
+  {{/if}}
+
   {{stave-container
       elementId="stave-container"
       pattern=this.pattern
@@ -80,13 +87,6 @@
     voice=this.resultantVoice
     currentlyPlaying=this.currentlyPlaying
   }}
-
-  {{t 'num_possibilities' numPossibilities=(format-number this.numPossibilities) numPatterns=this.numResultantPatterns htmlSafe=true}}
-
-  {{#if this.showGeneratePatternButton}}
-  <p><button class="button" id="random-pattern-button" {{on 'click' this.randomizePattern}}>Generate Random
-      Pattern</button></p>
-  {{/if}}
 
   {{else}}
   <p>No pattern exists for these parameters, please try a different combination.</p>

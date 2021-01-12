@@ -74,11 +74,11 @@ export default class ApplicationController extends Controller {
 
   minMelodicTurns = 0;
   maxMelodicTurns = 5;
-  @tracked numMelodicTurns = 5;
+  @tracked numMelodicTurns = 3;
 
   minTempo = 60;
-  maxTempo = 300;
-  @tracked tempo = 120;
+  maxTempo = 500;
+  @tracked tempo = 284;
 
   @tracked resultantVoice;
   @tracked drummer1Voice;
